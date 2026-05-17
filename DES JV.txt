@@ -5,7 +5,9 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 public class DES {
     public static void main(String[] args) throws Exception {
-        String plainText = "HelloDESAlgorithm";
+        Scanner sc=new Scanner(System.in);
+        
+        String plainText = sc.nextLine();
         
         KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
         keyGenerator.init(56);
