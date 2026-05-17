@@ -1,0 +1,52 @@
+package demo;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import java.util.Base64;
+public class DES {
+    public static void main(String[] args) throws Exception {
+        String plainText = "HelloDESAlgorithm";
+        
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+        keyGenerator.init(56);
+        SecretKey secretKey = keyGenerator.generateKey();
+
+         Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+
+        System.out.println("==============================================");
+        System.out.println("        DATA ENCRYPTION STANDARD (DES)       ");
+        System.out.println("==============================================");
+        byte[] plainBytes = plainText.getBytes();
+        System.out.println("\n[64-bit Plaintext]");
+        System.out.println(plainText);
+        System.out.println("\n--> Initial Permutation Applied");
+        System.out.println("\nLeft Plain Text (32-bit)");
+        System.out.println("(Simulated Left Half)");
+        System.out.println("\nRight Plain Text (32-bit)");
+        System.out.println("(Simulated Right Half)");
+
+        System.out.println("\n--- 16 Rounds Processing ---");
+        for (int i = 1; i <= 16; i++) {
+            System.out.println("Round " + i + " using Subkey K" + i);
+        }
+        System.out.println("\n--> Final Permutation Applied");
+     
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedBytes = cipher.doFinal(plainBytes);
+        String encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
+
+        System.out.println("\n[64-bit Ciphertext]");
+        System.out.println(encryptedText);
+
+        System.out.println("\n==============================================");
+        System.out.println("Decryption Process");
+        System.out.println("==============================================");
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+        String decryptedText = new String(decryptedBytes);
+
+        System.out.println("\nRecovered Plaintext:");
+        System.out.println(decryptedText);
+    }
+}

@@ -1,0 +1,41 @@
+package demo;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+public class RSA {
+
+    public static BigInteger encrypt(BigInteger message, BigInteger e, BigInteger n) {
+        return message.modPow(e, n);
+    }
+
+    public static BigInteger decrypt(BigInteger ciphertext, BigInteger d, BigInteger n) {
+        return ciphertext.modPow(d, n);
+    }
+
+    public static void main(String[] args) {
+
+        SecureRandom random = new SecureRandom();
+
+        BigInteger p = BigInteger.probablePrime(512, random);
+        BigInteger q = BigInteger.probablePrime(512, random);
+
+        BigInteger n = p.multiply(q);
+        BigInteger phi = (p.subtract(BigInteger.ONE))
+                .multiply(q.subtract(BigInteger.ONE));
+
+        BigInteger e = BigInteger.valueOf(65537);
+        BigInteger d = e.modInverse(phi);
+
+        String message = "Hello world";
+        BigInteger plaintext = new BigInteger(message.getBytes());
+
+        BigInteger ciphertext = encrypt(plaintext, e, n);
+        BigInteger decrypted = decrypt(ciphertext, d, n);
+
+        String decryptedMessage = new String(decrypted.toByteArray());
+
+        System.out.println("Original Message: " + message);
+        System.out.println("Encrypted Message: " + ciphertext);
+        System.out.println("Decrypted Message: " + decryptedMessage);
+    }
+}

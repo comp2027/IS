@@ -1,0 +1,68 @@
+package demo;
+import java.util.Scanner;
+
+public class Transposition {
+    static int getColumnIndex(String key, int value) {
+        return key.indexOf(Character.forDigit(value, 10));
+    }
+
+    static String encrypt(String text, String key) {
+        int cols = key.length();
+        int rows = (int) Math.ceil((double) text.length() / cols);
+
+        char[][] matrix = new char[rows][cols];
+        int index = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols && index < text.length(); j++) {
+                matrix[i][j] = text.charAt(index++);
+            }
+        }
+
+        StringBuilder cipherText = new StringBuilder();
+       for (int k = 1; k <= cols; k++) {
+            int col = getColumnIndex(key, k);
+            for (int i = 0; i < rows; i++) {
+                if (matrix[i][col] != '\0') {
+                    cipherText.append(matrix[i][col]);
+                }
+            }
+        }
+        return cipherText.toString();
+    }
+        static String decrypt(String cipherText, String key) {
+        int cols = key.length();
+        int rows = (int) Math.ceil((double) cipherText.length() / cols);
+
+        char[][] matrix = new char[rows][cols];
+        int index = 0;
+
+         for (int k = 1; k <= cols; k++) {
+            int col = getColumnIndex(key, k);
+            for (int i = 0; i < rows && index < cipherText.length(); i++) {
+                matrix[i][col] = cipherText.charAt(index++);
+            }
+        }
+        StringBuilder plainText = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matrix[i][j] != '\0') {
+                    plainText.append(matrix[i][j]);
+                }
+            }
+        }
+        return plainText.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Plain Text: ");
+        String plainText = sc.nextLine().replace(" ", "").toUpperCase();
+        System.out.print("Enter Key: ");
+        String key = sc.nextLine();
+        String cipherText = encrypt(plainText, key);
+        System.out.println("\nCipher Text: " + cipherText);
+        System.out.println("Decrypted Text: " + decrypt(cipherText, key));
+        sc.close();
+    }
+}
